@@ -1,3 +1,4 @@
+import Image from 'next/image'
 // app/services/[slug]/page.tsx
 import { notFound } from 'next/navigation'
 import BackButton from '@/components/BackButton'
@@ -21,11 +22,11 @@ async function fetchServiceBySlug(slug: string) {
 }
 
 // 提取富文本为纯文本
-function extractPlainText(richText: any): string {
+function extractPlainText(richText: Record<string, any>): string {
   if (Array.isArray(richText)) {
     return richText
-      .map((block: any) =>
-        block.children?.map((child: any) => child.text).join('') || ''
+      .map((block: Record<string, any>) =>
+        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
       )
       .join('\n')
   }
@@ -44,7 +45,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
     : null
 
   const galleryImages = gallery?.data?.map(
-    (img: any) => `http://localhost:1338${img.attributes.url}`
+    (img: Record<string, any>) => `http://localhost:1338${img.attributes.url}`
   ) || []
 
   return (
@@ -63,7 +64,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
         <h1 className="text-4xl font-bold mb-4">{title}</h1>
 
         {imageUrl && (
-          <img
+          <Image
             src={imageUrl}
             alt={title}
             className="w-32 h-32 object-contain mb-6 rounded-xl bg-gray-800 p-2"
@@ -83,7 +84,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
             <h2 className="text-2xl font-semibold text-green-400 mb-2">图集展示</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {galleryImages.map((url: string, index: number) => (
-                <img
+                <Image
                   key={index}
                   src={url}
                   alt={`图 ${index + 1}`}

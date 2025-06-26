@@ -28,7 +28,7 @@ interface Technology {
   id: number
   attributes: {
     title: string
-    description: any
+    description: Record<string, any>
     icon?: {
       data?: {
         attributes: {
@@ -43,7 +43,7 @@ interface Service {
   id: number
   attributes: {
     title: string
-    description: any
+    description: Record<string, any>
     icon?: {
       data?: {
         attributes: {
@@ -54,11 +54,11 @@ interface Service {
   }
 }
 
-function extractPlainText(richText: any): string {
+function extractPlainText(richText: Record<string, any>): string {
   if (Array.isArray(richText)) {
     return richText
-      .map((block: any) =>
-        block.children?.map((child: any) => child.text).join('') || ''
+      .map((block: Record<string, any>) =>
+        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
       )
       .join('\n')
   }

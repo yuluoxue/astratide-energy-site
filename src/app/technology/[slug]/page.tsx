@@ -1,3 +1,4 @@
+import Image from 'next/image'
 // app/technology/[slug]/page.tsx
 
 import { notFound } from 'next/navigation'
@@ -21,10 +22,10 @@ async function fetchTechnologyBySlug(slug: string) {
 }
 
 // 提取富文本纯文本
-function extractPlainText(richText: any): string {
+function extractPlainText(richText: Record<string, any>): string {
   if (Array.isArray(richText)) {
-    return richText.map((block: any) =>
-      block.children?.map((child: any) => child.text).join('') || ''
+    return richText.map((block: Record<string, any>) =>
+      block.children?.map((child: Record<string, any>) => child.text).join('') || ''
     ).join('\n')
   }
   return typeof richText === 'string' ? richText : ''
@@ -41,7 +42,7 @@ export default async function TechnologyDetailPage({ params }: PageProps) {
     : null
 
   const galleryImages: string[] =
-    gallery?.data?.map((img: any) => `http://localhost:1338${img.attributes.url}`) || []
+    gallery?.data?.map((img: Record<string, any>) => `http://localhost:1338${img.attributes.url}`) || []
 
   return (
     <main
@@ -59,7 +60,7 @@ export default async function TechnologyDetailPage({ params }: PageProps) {
         <h1 className="text-3xl font-bold mb-4">{title}</h1>
 
         {thumbUrl && (
-          <img
+          <Image
             src={thumbUrl}
             alt={title}
             className="w-full max-w-3xl rounded-xl mb-6 mx-auto"
@@ -76,7 +77,7 @@ export default async function TechnologyDetailPage({ params }: PageProps) {
             <h2 className="text-xl font-semibold text-green-400 mb-2">图集</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {galleryImages.map((url, index) => (
-                <img
+                <Image
                   key={index}
                   src={url}
                   alt={`图 ${index + 1}`}

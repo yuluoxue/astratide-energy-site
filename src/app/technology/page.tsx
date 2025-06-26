@@ -1,3 +1,4 @@
+import Image from 'next/image'
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -11,7 +12,7 @@ interface Technology {
   attributes: {
     title: string
     slug: string
-    description: any
+    description: Record<string, any>
     icon?: {
       data?: {
         attributes: {
@@ -23,11 +24,11 @@ interface Technology {
 }
 
 // ✅ 提取 Strapi 富文本为纯文本
-function extractPlainText(richText: any): string {
+function extractPlainText(richText: Record<string, any>): string {
   if (Array.isArray(richText)) {
     return richText
-      .map((block: any) =>
-        block.children?.map((child: any) => child.text).join('') || ''
+      .map((block: Record<string, any>) =>
+        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
       )
       .join('\n')
   }
@@ -74,7 +75,7 @@ export default function TechnologyPage() {
                 {/* 图标展示 */}
                 {tech.attributes.icon?.data?.attributes?.url && (
                   <div className="w-16 h-16 p-2 bg-gray-700 rounded-xl flex items-center justify-center overflow-hidden">
-                    <img
+                    <Image
                       src={`http://localhost:1338${tech.attributes.icon.data.attributes.url}`}
                       alt={tech.attributes.title}
                       className="w-full h-full object-contain"

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 // app/fleet/[slug]/page.tsx
 
 import { notFound } from 'next/navigation'
@@ -22,11 +23,11 @@ async function fetchShipBySlug(slug: string) {
 }
 
 // 提取 Strapi 富文本为纯文本
-function extractPlainText(richText: any): string {
+function extractPlainText(richText: Record<string, any>): string {
   if (Array.isArray(richText)) {
     return richText
-      .map((block: any) =>
-        block.children?.map((child: any) => child.text).join('') || ''
+      .map((block: Record<string, any>) =>
+        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
       )
       .join('\n')
   }
@@ -94,7 +95,7 @@ style={{
 
         {/* 封面图 */}
         {imageUrl && (
-          <img
+          <Image
             src={imageUrl}
             alt={name}
             className="w-full max-w-2xl rounded-xl mb-6 mx-auto"

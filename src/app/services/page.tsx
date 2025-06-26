@@ -12,7 +12,7 @@ interface Service {
   attributes: {
     title: string
     slug: string               // ✅ 添加 slug 字段
-    description: any
+    description: Record<string, any>
     icon?: {
       data?: {
         attributes: {
@@ -24,11 +24,11 @@ interface Service {
 }
 
 // 提取富文本为纯文本
-function extractPlainText(richText: any): string {
+function extractPlainText(richText: Record<string, any>): string {
   if (Array.isArray(richText)) {
     return richText
-      .map((block: any) =>
-        block.children?.map((child: any) => child.text).join('') || ''
+      .map((block: Record<string, any>) =>
+        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
       )
       .join('\n')
   }
