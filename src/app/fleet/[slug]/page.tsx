@@ -35,7 +35,14 @@ function extractPlainText(richText: Record<string, any>): string {
 }
 
 // 主页面组件
-export default async function Page({ params }: { params: { slug: string } }) {
+interface PageProps {
+  params: {
+    slug: string
+  }
+}
+
+export default async function Page({ params }: PageProps) {
+
 
   const ship = await fetchShipBySlug(params.slug)
   if (!ship) notFound()
