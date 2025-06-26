@@ -3,9 +3,14 @@ import { notFound } from 'next/navigation'
 import BackButton from '@/components/BackButton'
 
 // ✅ 不使用 interface PageProps，直接解构参数
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: { slug: string }
+}) {
   const ship = await fetchShipBySlug(params.slug)
   if (!ship) notFound()
+
 
   const {
     name,
