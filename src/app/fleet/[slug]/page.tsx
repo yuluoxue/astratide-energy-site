@@ -2,33 +2,8 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import BackButton from '@/components/BackButton'
 
-// 🚫 不再单独定义 PageProps
+// ✅ 不使用 interface PageProps，直接解构参数
 export default async function Page({ params }: { params: { slug: string } }) {
-  const ship = await fetchShipBySlug(params.slug)
-  if (!ship) notFound()
-
-  // 下面代码保持不变……
-}
-
-
-// 提取 Strapi 富文本为纯文本
-function extractPlainText(richText: Record<string, any>): string {
-  if (Array.isArray(richText)) {
-    return richText
-      .map((block: Record<string, any>) =>
-        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
-      )
-      .join('\n')
-  }
-  return typeof richText === 'string' ? richText : ''
-}
-
-// ✅ 不使用 interface PageProps，直接函数参数解构
-export default async function Page({
-  params,
-}: {
-  params: { slug: string }
-}) {
   const ship = await fetchShipBySlug(params.slug)
   if (!ship) notFound()
 
@@ -52,7 +27,7 @@ export default async function Page({
   } = ship.attributes
 
   const imageUrl = thumbnail?.data?.[0]?.attributes?.url
-    ? `${process.env.NEXT_PUBLIC_API_URL}${thumbnail.data[0].attributes.url}`
+    ? `http://localhost:1338${thumbnail.data[0].attributes.url}`
     : null
 
   return (
@@ -92,9 +67,7 @@ export default async function Page({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-gray-200 drop-shadow">
           <p>满载定员：{crew_full ?? '未知'} 人</p>
           <p>最小定员：{crew_min ?? '未知'} 人</p>
-          <p>
-            舰船尺寸：{length ?? '未知'}m × {width ?? '未知'}m × {height ?? '未知'}m
-          </p>
+          <p>舰船尺寸：{length ?? '未知'}m × {width ?? '未知'}m × {height ?? '未知'}m</p>
           <p>空载质量：{mass_empty ?? '未知'} 吨</p>
           <p>满载质量：{mass_full ?? '未知'} 吨</p>
           <p>最大无补给远航时间：{endurance ?? '未知'}</p>
@@ -127,4 +100,26 @@ export default async function Page({
       </div>
     </main>
   )
+}
+
+// 🔧 富文本提取函数放在组件后也没问题
+function extractPlainText(richText: Record<string, any>): string {
+  if (Array.isArray(richText)) {
+    return richText
+      .map((block: Record<string, any>) =>
+        block.children?.map((child: Record<string, any>) => child.text).join('') || ''
+      )
+      .join('\n')
+  }
+  return typeof richText === 'string' ? richText : ''
+}
+
+// 🔧 可选：你也可以将 fetchShipBySlug 移到组件上方或单独文件中
+async function fetchShipBySlug(slug: string) {
+  const res = await fetch(
+    `http://localhost:1338/api/ships?filters[slug][$eq]=${slug}&populate=*`,
+    { cache: 'no-store' }
+  )
+  const data = await res.json()
+  return data.data?.[0] || null
 }
