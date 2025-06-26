@@ -2,15 +2,14 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import BackButton from '@/components/BackButton'
 
-// 获取指定 slug 的舰船数据
-async function fetchShipBySlug(slug: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/ships?filters[slug][$eq]=${slug}&populate=*`,
-    { cache: 'no-store' }
-  )
-  const data = await res.json()
-  return data.data?.[0] || null
+// 🚫 不再单独定义 PageProps
+export default async function Page({ params }: { params: { slug: string } }) {
+  const ship = await fetchShipBySlug(params.slug)
+  if (!ship) notFound()
+
+  // 下面代码保持不变……
 }
+
 
 // 提取 Strapi 富文本为纯文本
 function extractPlainText(richText: Record<string, any>): string {
