@@ -1,12 +1,12 @@
-import Image from 'next/image'
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import BackButton from '@/components/BackButton'
+// ...其他内容不变
 
-// ✅ 技术数据结构定义
 interface Technology {
   id: number
   attributes: {
