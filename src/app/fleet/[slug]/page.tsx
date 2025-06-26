@@ -123,3 +123,12 @@ async function fetchShipBySlug(slug: string) {
   const data = await res.json()
   return data.data?.[0] || null
 }
+// ✅ 显式导出 generateStaticParams，解决 Vercel 构建时报错
+export async function generateStaticParams() {
+  const res = await fetch('http://localhost:1338/api/ships')
+  const data = await res.json()
+
+  return data.data.map((ship: any) => ({
+    slug: ship.attributes.slug,
+  }))
+}
