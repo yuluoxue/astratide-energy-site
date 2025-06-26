@@ -34,7 +34,8 @@ function extractPlainText(richText: any): string {
 }
 
 // 主页面组件
-export default async function ShipDetailPage({ params }: ShipDetailProps) {
+export default async function Page({ params }: { params: { slug: string } }) {
+
   const ship = await fetchShipBySlug(params.slug)
   if (!ship) notFound()
 
